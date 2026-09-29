@@ -1,3 +1,5 @@
+import runpy
+
 from app.calculator import Calculator
 
 
@@ -152,4 +154,30 @@ def test_run_invalid_command_then_exit(monkeypatch, capsys):
     captured = capsys.readouterr()
 
     assert "Invalid command. Type 'help' to see available commands." in captured.out
-    assert "Goodbye!" in captured.out   
+    assert "Goodbye!" in captured.out
+
+
+def test_calculator_module_startup(monkeypatch):
+    run_called = {"value": False}
+
+    def fake_run(self):
+        run_called["value"] = True
+
+    monkeypatch.setattr(Calculator, "run", fake_run)
+
+    runpy.run_module("app.calculator.__main__", run_name="__main__")
+
+    assert run_called["value"] is True 
+
+
+def test_calculator_module_does_not_start_when_not_main(monkeypatch):
+    run_called = {"value": False}
+
+    def fake_run(self):
+        run_called["value"] = True
+
+    monkeypatch.setattr(Calculator, "run", fake_run)
+
+    runpy.run_module("app.calculator.__main__", run_name="not_main")
+
+    assert run_called["value"] is False  
