@@ -3,6 +3,9 @@ from app.operation import Operation
 
 
 class Calculation(ABC):
+    """Abstract base class for calculator operations."""
+
+
     def __init__(self, a: float, b: float):
         self.a = a
         self.b = b
@@ -33,8 +36,12 @@ class DivideCalculation(Calculation):
 
 
 class CalculationFactory:
+    """Creates calculation objects based on the requested operation."""
+
+
     @staticmethod
     def create_calculation(operation: str, a: float, b: float) -> Calculation:
+        """Create the appropriate calculation object for the requested operation."""
         calculation_types = {
             "add": AddCalculation,
             "subtract": SubtractCalculation,
